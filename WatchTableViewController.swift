@@ -13,20 +13,23 @@ class WatchTableViewController: UITableViewController, MyCustomCellDelegator {
     @IBOutlet weak var seasonEpisodeOutlet: UILabel!
     @IBOutlet weak var episodeNameOutlet: UILabel!
     
+    var myWatch:[Int:[Int]] = [:]
+
+    
     var selectedIndexPath : IndexPath?
     
     @IBOutlet var tableViewOutlet: UITableView!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        showsToWatch(idArray: Array(SeriesController.sharedController.watchedDict.keys)) { (dict) in
+        
+        let myIdArray = Array(SeriesController.sharedController.watchedDict.keys)
+        showsToWatch(idArray: myIdArray) { (dict) in
             SeriesController.sharedController.toWatchDict = dict
-            SeriesController.sharedController.toWatchDict[0] = nil
             
             DispatchQueue.main.async(execute: {
                 self.tableViewOutlet.reloadData()
@@ -35,34 +38,62 @@ class WatchTableViewController: UITableViewController, MyCustomCellDelegator {
     }
     
     @IBAction func buttonTapped(_ sender: AnyObject) {
+        SeriesController.sharedController.toWatchDict = myWatch
         self.tableViewOutlet.reloadData()
     }
     
     
     func showsToWatch(idArray: [Int], completion:@escaping(_ dict: [Int:[Int]])->Void){
-        var toWatch:[Int:[Int]] = [0:[]]
+//        var toWatch:[Int:[Int]] = [:]
         
-        let groupDispatch = DispatchGroup()
-
+//        let groupDispatch = DispatchGroup()
+        
+        
         for id in idArray {
-            guard let watchedId = SeriesController.sharedController.watchedDict[id] else {return;}
-            
-            groupDispatch.enter()
+            guard let watchedId = SeriesController.sharedController.watchedDict[id] else {return}
+//            groupDispatch.enter()
             
             NetworkController.getEpisodes(id) { (episodes, error) in
                 if let episodes = episodes {
                     let episodesId = episodes.map({$0.id})
                     
                     let difference = episodesId.filter { !watchedId.contains($0) }
-                    toWatch[id] = difference
                     
-                    groupDispatch.leave()
-            }
+                    /*
+                    let unsorted: [Episode] = allEpisodes
+                    var mySort: [Episode]
+                    
+                    mySort = unsorted.sorted { t1, t2 in
+                        if t1.airedSeason == t2.airedSeason {
+                            return t1.airedEpisodeNumber < t2.airedEpisodeNumber
+                        }
+                        return t1.airedSeason < t2.airedSeason
+                    }
+                    
+                    var seasonDict: [Int:[Episode]] = [:]
+                    
+                    for sode in mySort {
+                        let season = sode.airedSeason
+                        
+                        if seasonDict[season] != nil {
+                            seasonDict[season]!.append(sode)
+                        } else {
+                            seasonDict[season] = [sode]
+                        }
+                    }
+                    */
+                    
+//                    toWatch[id] = difference
+                    self.myWatch[id] = difference
+                }
+//            groupDispatch.leave()
             }
         }
-        groupDispatch.notify(queue: DispatchQueue.main, execute: { () -> Void in
-            completion(toWatch)
-        })
+
+
+//        groupDispatch.notify(queue: DispatchQueue.main, execute: { () -> Void in
+//            completion(toWatch)
+//        })
     }
     
     // MARK: - TableView
@@ -73,8 +104,8 @@ class WatchTableViewController: UITableViewController, MyCustomCellDelegator {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if SeriesController.sharedController.toWatchDict.keys.count > 1 {
-            return SeriesController.sharedController.toWatchDict.keys.count - 1
+        if SeriesController.sharedController.toWatchDict.keys.count >= 1 {
+            return SeriesController.sharedController.toWatchDict.keys.count
         } else {
             return 1
         }
@@ -85,7 +116,7 @@ class WatchTableViewController: UITableViewController, MyCustomCellDelegator {
         
         cell.delegate = self
         
-        if SeriesController.sharedController.toWatchDict.keys.count > 1 {
+        if SeriesController.sharedController.toWatchDict.keys.count >= 1 {
             let seriesArray = Array(SeriesController.sharedController.toWatchDict.keys)
             
             let seriesId = seriesArray[indexPath.row]
@@ -167,6 +198,7 @@ class WatchTableViewController: UITableViewController, MyCustomCellDelegator {
         }
     }
 }
+
 protocol MyCustomCellDelegator {
     func callSegueFromCell(myData dataobject: AnyObject)
     func reloadTableView()

@@ -54,7 +54,7 @@ class ScheduleTableViewCell: UITableViewCell {
     var isObserving = false
     
     class var expandedHeight: CGFloat { get { return 150 } }
-    class var defaultHeight: CGFloat  { get { return 44  } }
+    class var defaultHeight: CGFloat  { get { return 85  } }
     
     func checkHeight() {
         extendedViewOutlet.isHidden = (frame.size.height < ScheduleTableViewCell.expandedHeight)

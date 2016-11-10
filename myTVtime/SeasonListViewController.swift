@@ -38,7 +38,7 @@ class SeasonListViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "seasonCell", for: indexPath)
         
-        let episodePack = episodesDict![indexPath.row + 1 ]!.map({$0.id})
+        let episodePack = episodesDict![indexPath.row + 1]!.map({$0.id})
 
         let myWatchedSet = Set(SeriesController.sharedController.watchedDict[series!.id]!)
         let episodePackSet = Set(episodePack)
@@ -57,8 +57,8 @@ class SeasonListViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let episodesDict = episodesDict else {return;}
-        let path = indexPath.row
-        let season: Int = path + 1
+        let path = indexPath.row + 1
+        let season: Int = path
         let episodePack = episodesDict[season]!.map({$0.id})
 
         let myWatchedSet = Set(SeriesController.sharedController.watchedDict[series!.id]!)

@@ -34,30 +34,25 @@ class SeriesViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         guard let allEpisodes = episodes else {return;}
         
-        let sorted: [Episode] = allEpisodes
+        let unsorted: [Episode] = allEpisodes
         var mySort: [Episode]
         
-        if sorted[0].absoluteNumber < 0 {
-            mySort = sorted.sorted { t1, t2 in
-                if t1.airedSeason == t2.airedSeason {
-                    return t1.airedEpisodeNumber < t2.airedEpisodeNumber
-                }
-                return t1.airedSeason < t2.airedSeason
+        mySort = unsorted.sorted { t1, t2 in
+            if t1.airedSeason == t2.airedSeason {
+                return t1.airedEpisodeNumber < t2.airedEpisodeNumber
             }
-        } else {
-            mySort = sorted.sorted(by: { $0.absoluteNumber < $1.absoluteNumber })
+            return t1.airedSeason < t2.airedSeason
         }
-        var seasonDict: [Int:[Episode]] = [1:[]]
+    
+        var seasonDict: [Int:[Episode]] = [:]
         
-        var season = 1
         for sode in mySort {
-            let mySeason = sode.airedSeason
-            if season == mySeason {
+            let season = sode.airedSeason
+            
+            if seasonDict[season] != nil {
                 seasonDict[season]!.append(sode)
             } else {
-                seasonDict[mySeason] = []
-                season = mySeason
-                seasonDict[mySeason]!.append(sode)
+                seasonDict[season] = [sode]
             }
         }
 

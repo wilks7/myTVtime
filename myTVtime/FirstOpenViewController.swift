@@ -72,6 +72,8 @@ class FirstOpenViewController: UIViewController, UITableViewDataSource, UITableV
             let data = NSKeyedArchiver.archivedData(withRootObject: theDict)
             UserDefaults.standard.set(data, forKey: "watchedDict")
         }
+        
+        UserDefaults.standard.set(true, forKey: "launchedBefore")
 
         DispatchQueue.main.async(execute: {
             self.tableviewOutlet.reloadData()

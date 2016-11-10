@@ -12,10 +12,17 @@ import UIKit
 
 class NetworkController {
     
-    static var myToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NzQ2NTI5ODYsImlkIjoibXlUVnRpbWUiLCJvcmlnX2lhdCI6MTQ3NDU2NjU4Nn0.BMsTzrNhys_jhZyHYHmGuGnpJ4ZMtyFC3oCgzj3jva4meFNSDlaCmOj3jgbOLDbizdgQYB4ZiLjtBv3pCXBxP7uAIISwnd3KqUaxO-hXdoyePDUP_kGyiKTHSXTjp7HhWskzr94NY9I154d4ECfP6ChMQXj0HYnY1WMX7Vq7zLldPZZEv-dDSs-BxpINba9ggMjW3c_coiiN_AFoZnwZOhquyR9gojRUfUZE8Mqq83SOsozm0ngLK0BXvWXMSOLfqJX5i9p6-D9CtyscCEln7Y09Qm-xj4H0mS_Q4GP06F-1VpxI7hiA59zQ8mu5x2_196cq-EEdVWlgJHdQWUgAVA"
+    static let apiKey = "394CF947FBDECE63"
+    
+    static var myToken = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0Nzg3OTYwODIsImlkIjoibXlUVnRpbWUiLCJvcmlnX2lhdCI6MTQ3ODcwOTY4Mn0.HxIb9eajX_vmfXYBDqyuJ1WMqqp9h4_fDW3F4wfI2zBHCgkyJOiJlpB97hmZ73Ja-2hq7_VPGahMS-iPc_30riNL2rVm5xpsmVTtQYjTWT134HQuxcABw0U2PbqsA4s7AVyF2wvrh0YJ4xOvmwDzm2zVVN6gqXhgQeL4uozvpeBkbPLXKd4u4KLa_72PZWDmubmihHp3AJgmWghmrHO_dhh4PUpmgLkQdc9l35ARIy1EWm0CWfTb2sF2spr5F_nDiNFcGkyTLXF5L5dFENlVOJ1-ptMHvZJcu23p1jpZEaEWM91Hj1MDKFQdc--SHbgRD8Zyo3CSPz_KMFUgfYO-0g"
     
     static let baseUrl = "https://api.thetvdb.com/"
     
+    
+    static func apiKeyToken(){
+        //
+        //
+    }
     
     static func refreshToken(){
         let urlStr = baseUrl + "refresh_token"
@@ -38,6 +45,8 @@ class NetworkController {
                     if let dataDict = convertedJsonIntoDict as? [String:String] {
                         if let token = dataDict["token"] {
                             myToken = token
+                        } else {
+                            print("Token Error")
                         }
                     }
                 }

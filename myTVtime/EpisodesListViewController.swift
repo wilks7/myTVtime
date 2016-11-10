@@ -76,7 +76,7 @@ class EpisodesListViewController: UIViewController, UITableViewDataSource, UITab
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let path = indexPath.row
         let id = episodes![path].id
-        let cellToUpdate = tableView.cellForRow(at: indexPath)
+        //let cellToUpdate = tableView.cellForRow(at: indexPath)
         //let seriesId = SeriesController.sharedController.watchedDict[series!.id]
         
         let isWatched = isEpisodeWatch(id: id)

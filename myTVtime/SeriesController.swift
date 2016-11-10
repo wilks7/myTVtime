@@ -21,8 +21,9 @@ class SeriesController {
     
     var todayList = [Episode]()
     
-    var watchedDict: [Int:[Int]] = [0:[]]
+    var watchedDict: [Int:[Int]] = [:]
     
-    var toWatchDict: [Int:[Int]] = [0:[]]
+    var toWatchDict: [Int:[Int]] = [:]
+    
 
 }

@@ -24,6 +24,7 @@ class ScheduleTableViewController: UITableViewController, MyCustomCellDelegator 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         checkFirstLaunch()
+        self.tableView.reloadData()
     }
 
     func loadMyList(){
@@ -33,6 +34,7 @@ class ScheduleTableViewController: UITableViewController, MyCustomCellDelegator 
                 SeriesController.sharedController.watchedDict = dict
                 let showArray = Array(SeriesController.sharedController.watchedDict.keys)
                 NetworkController.cacheAllBanners(series: showArray, completion: { (done, error) in
+                    // TODO: Find a way to combine cacheAllBanners and seriesByID
                     if done {
                         for id in showArray {
                             
@@ -41,7 +43,7 @@ class ScheduleTableViewController: UITableViewController, MyCustomCellDelegator 
                                 SeriesController.sharedController.myList.append(series)
                                 
                                 if series.status == "Continuing"{ //  && series.airsDayOfWeek == today
-                                    for i in 0...7 {
+                                    for i in 0...6 {
                                         let now = Date()
                                         let myCalen = NSCalendar.current
                                         let dateStringFormatter = DateFormatter()
@@ -71,25 +73,22 @@ class ScheduleTableViewController: UITableViewController, MyCustomCellDelegator 
                                         })
                                     }
                                 }
-                                
                                 DispatchQueue.main.async(execute: {
                                     self.tableView.reloadData()
                                 })
                             })
                         }// for
                     }// if
-                })
+                })//cacheAllBanners
             }
         }
         
     }
     
     func checkFirstLaunch() {
-        
         let launchedBefore = UserDefaults.standard.bool(forKey: "launchedBefore")
         if !launchedBefore {
-            UserDefaults.standard.set(true, forKey: "launchedBefore")
-            navigationController?.performSegue(withIdentifier: "firstTime", sender: nil)
+            self.performSegue(withIdentifier: "firstTime", sender: nil)
         }
     }
 

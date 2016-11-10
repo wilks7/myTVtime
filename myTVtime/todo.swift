@@ -9,6 +9,7 @@
  
 -- watched list is ordered by season not episode
  
+-- Fix crash when "watched" all episodes from a show
  
  
  
@@ -16,5 +17,4 @@
  
  
  
- 
- */
+*/
