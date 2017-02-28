@@ -26,7 +26,14 @@ class ScheduleTableViewController: UITableViewController, MyCustomCellDelegator 
         checkFirstLaunch()
         self.tableView.reloadData()
     }
-
+    
+    func loadWatchedList(){
+        let outData = UserDefaults.standard.data(forKey: "watchedDict")
+        guard let data = outData else {return}
+        guard let dict = NSKeyedUnarchiver.unarchiveObject(with: data) as? [Int:[Int]] else {return }
+        SeriesController.sharedController.watchedDict = dict
+    }
+    
     func loadMyList(){
         let outData = UserDefaults.standard.data(forKey: "watchedDict")
         if let outData = outData {
@@ -81,8 +88,9 @@ class ScheduleTableViewController: UITableViewController, MyCustomCellDelegator 
                     }// if
                 })//cacheAllBanners
             }
+        } else {
+            print("No UserDefaults Data")
         }
-        
     }
     
     func checkFirstLaunch() {

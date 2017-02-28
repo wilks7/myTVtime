@@ -19,12 +19,45 @@ class NetworkController {
     static let baseUrl = "https://api.thetvdb.com/"
     
     
-    static func apiKeyToken(){
-        //
-        //
+    static func apiKeyToken() {
+        /*
+         curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{"apikey":"394CF947FBDECE63"}' 'https://api.thetvdb.com/login'
+
+         */
+        let urlStr = baseUrl + "login"
+        let myUrl = URL(string: urlStr)
+        
+        var request = URLRequest(url:myUrl!)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        //request.addValue("{\"apikey\":\"394CF947FBDECE63\"}", forHTTPHeaderField: "-d")
+        
+        let postString = "{\"apikey\":\"394CF947FBDECE63\"}"
+        request.httpBody = postString.data(using: .utf8)
+        
+        let task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            
+            if error != nil { print("error=\(error)"); return }
+            
+            do {
+                if let convertedJsonIntoDict = try JSONSerialization.jsonObject(with: data!, options: []) as? NSDictionary {
+                    
+                    if let dataDict = convertedJsonIntoDict as? [String:String] {
+                        if let token = dataDict["token"] {
+                            myToken = token
+                        } else {
+                            print("Token Error")
+                        }
+                    }
+                }
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+        }); task.resume()
     }
     
-    static func refreshToken(){
+    static func refreshToken(completion:@escaping(_ result: String)->Void){
         let urlStr = baseUrl + "refresh_token"
         let myUrl = URL(string: urlStr)
         
@@ -45,8 +78,10 @@ class NetworkController {
                     if let dataDict = convertedJsonIntoDict as? [String:String] {
                         if let token = dataDict["token"] {
                             myToken = token
+                            completion(myToken)
                         } else {
                             print("Token Error")
+                            completion("error")
                         }
                     }
                 }
